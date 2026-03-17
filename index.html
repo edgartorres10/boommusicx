@@ -4,64 +4,108 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoomMusicX - Feed Musical</title>
+<link rel="manifest" href="manifest.json">
 <style>
-body { margin:0; padding:0; background:#000; color:#fff; font-family:sans-serif; overflow:hidden; }
-.music-feed { height:100vh; overflow-y: scroll; scroll-snap-type:y mandatory; }
-.music-card { height:100vh; scroll-snap-align:start; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.cover-image { width:300px; height:300px; object-fit:cover; border-radius:20px; margin-bottom:20px; }
-.track-name { font-size:24px; margin:0; }
-.artist-name { font-size:18px; margin:5px 0 20px; color:#aaa; }
-.player-container { width:300px; margin-bottom:10px; }
-.spotify-button { background:#1DB954; color:#000; padding:10px 20px; border-radius:50px; text-decoration:none; display:inline-block; font-weight:600; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;overscroll-behavior:none;overflow:hidden;height:100vh;width:100vw;position:fixed}
+.music-feed{height:100vh;width:100vw;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;background:#000}
+.music-card{height:100vh;width:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;background:linear-gradient(145deg,#0a0a0a 0%,#000 100%);overflow:hidden}
+.music-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 30% 50%,rgba(30,215,96,0.08) 0%,transparent 60%);pointer-events:none;animation:pulseGlow 4s ease-in-out infinite}
+@keyframes pulseGlow{0%,100%{opacity:0.3}50%{opacity:0.6}}
+.cover-container{width:min(85vw,380px);aspect-ratio:1/1;margin-bottom:24px;position:relative;z-index:2;animation:floatCover 3s ease-in-out infinite;filter:drop-shadow(0 20px 25px -5px rgba(0,0,0,0.8)) drop-shadow(0 8px 10px -6px rgba(0,0,0,0.5))}
+@keyframes floatCover{0%,100%{transform:translateY(0px) scale(1)}50%{transform:translateY(-6px) scale(1.02)}}
+.cover-image{width:100%;height:100%;object-fit:cover;border-radius:24px;box-shadow:0 25px 40px -12px rgba(0,0,0,0.8),0 0 0 2px rgba(30,215,96,0.15) inset;transition:all 0.5s cubic-bezier(0.2,0.9,0.3,1.1)}
+.track-info{width:100%;max-width:400px;text-align:center;z-index:2;padding:0 16px;margin-bottom:20px}
+.track-name{font-size:clamp(24px,7vw,32px);font-weight:700;letter-spacing:-0.02em;margin-bottom:6px;background:linear-gradient(to bottom,#fff,#ddd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 2px 5px rgba(0,0,0,0.3);animation:slideUp 0.5s ease-out}
+.artist-name{font-size:clamp(16px,5vw,20px);color:#b3b3b3;font-weight:400;letter-spacing:0.3px;animation:slideUp 0.6s ease-out}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.player-container{width:100%;max-width:400px;margin:16px 0 20px;z-index:2;border-radius:16px;overflow:hidden;background:rgba(20,20,20,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.05);box-shadow:0 20px 30px -10px rgba(0,0,0,0.5);transition:transform 0.3s ease,box-shadow 0.3s ease}
+.player-container:hover{transform:scale(1.02);box-shadow:0 25px 35px -8px rgba(30,215,96,0.2)}
+.spotify-iframe{width:100%;height:80px;border:none;display:block}
+.spotify-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#1DB954;color:#000;text-decoration:none;padding:14px 36px;border-radius:50px;font-weight:600;font-size:16px;letter-spacing:0.5px;border:none;cursor:pointer;transition:all 0.3s cubic-bezier(0.2,0.9,0.3,1.1);z-index:2;box-shadow:0 8px 20px rgba(29,185,84,0.3);margin-top:8px;position:relative;overflow:hidden}
+.spotify-button::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,0.3);transform:translate(-50%,-50%);transition:width 0.6s,height 0.6s}
+.spotify-button:hover::before{width:300px;height:300px}
+.spotify-button:hover{background:#1ed760;transform:scale(1.05);box-shadow:0 12px 25px rgba(29,185,84,0.5)}
+.spotify-button:active{transform:scale(0.98)}
+.header-logo{position:fixed;top:20px;left:20px;z-index:100;font-size:22px;font-weight:800;letter-spacing:-0.5px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,0.5);display:flex;align-items:center}
+.header-logo span{color:#1DB954;margin-left:4px;font-size:24px}
+.scroll-indicator{position:fixed;right:16px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:100}
+.dot{width:6px;height:6px;border-radius:10px;background:rgba(255,255,255,0.3);transition:all 0.3s ease;cursor:pointer}
+.dot.active{width:10px;height:10px;background:#1DB954;box-shadow:0 0 15px #1DB954}
+.music-feed::-webkit-scrollbar{display:none}
+.music-feed{-ms-overflow-style:none;scrollbar-width:none}
+.fade-in{animation:fadeIn 0.8s ease-out}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
-<div class="music-feed">
-
-<!-- Música 1 -->
-<section class="music-card">
-<img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273d5403a8ad1dae5fd2c63c06b" alt="Cover Blinding Lights">
-<div class="track-name">Blinding Lights</div>
-<div class="artist-name">The Weeknd</div>
-<div class="player-container">
-<iframe src="https://open.spotify.com/embed/track/0VjIjW4GlUZAMYd2vXMi3b" width="300" height="80" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<div class="header-logo fade-in">BOOM<span>MUSICX</span></div>
+<div class="scroll-indicator" id="scrollIndicator">
+    <div class="dot active" data-index="0"></div>
+    <div class="dot" data-index="1"></div>
+    <div class="dot" data-index="2"></div>
+    <div class="dot" data-index="3"></div>
 </div>
-<a href="https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b" target="_blank" class="spotify-button">Ouvir no Spotify</a>
-</section>
-
-<!-- Música 2 -->
-<section class="music-card">
-<img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273a108e07c6616e80a2c10932a" alt="Cover Flowers">
-<div class="track-name">Flowers</div>
-<div class="artist-name">Miley Cyrus</div>
-<div class="player-container">
-<iframe src="https://open.spotify.com/embed/track/7DSAEUvxU8FajXtRloy8M0" width="300" height="80" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<div class="music-feed" id="musicFeed">
+    <!-- Música 1 -->
+    <section class="music-card" data-index="0">
+        <div class="cover-container">
+            <img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273d5403a8ad1dae5fd2c63c06b" alt="Blinding Lights">
+        </div>
+        <div class="track-info">
+            <h2 class="track-name">Blinding Lights</h2>
+            <p class="artist-name">The Weeknd</p>
+        </div>
+        <div class="player-container">
+            <iframe class="spotify-iframe" src="https://open.spotify.com/embed/track/0VjIjW4GlUZAMYd2vXMi3b?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        </div>
+        <a href="https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b" target="_blank" class="spotify-button">Ouvir no Spotify</a>
+    </section>
+    <!-- Música 2 -->
+    <section class="music-card" data-index="1">
+        <div class="cover-container">
+            <img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273a108e07c6616e80a2c10932a" alt="Flowers">
+        </div>
+        <div class="track-info">
+            <h2 class="track-name">Flowers</h2>
+            <p class="artist-name">Miley Cyrus</p>
+        </div>
+        <div class="player-container">
+            <iframe class="spotify-iframe" src="https://open.spotify.com/embed/track/7DSAEUvxU8FajXtRloy8M0?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        </div>
+        <a href="https://open.spotify.com/track/7DSAEUvxU8FajXtRloy8M0" target="_blank" class="spotify-button">Ouvir no Spotify</a>
+    </section>
+    <!-- Música 3 -->
+    <section class="music-card" data-index="2">
+        <div class="cover-container">
+            <img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273a91c10fe9472d9bd89802e5a" alt="Cruel Summer">
+        </div>
+        <div class="track-info">
+            <h2 class="track-name">Cruel Summer</h2>
+            <p class="artist-name">Taylor Swift</p>
+        </div>
+        <div class="player-container">
+            <iframe class="spotify-iframe" src="https://open.spotify.com/embed/track/1BxfuPKGuaTgP7aM0Bbdwr?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        </div>
+        <a href="https://open.spotify.com/track/1BxfuPKGuaTgP7aM0Bbdwr" target="_blank" class="spotify-button">Ouvir no Spotify</a>
+    </section>
+    <!-- Música 4 -->
+    <section class="music-card" data-index="3">
+        <div class="cover-container">
+            <img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273f1c8dcd4d3a8a5f1731dc4c5" alt="Dance The Night">
+        </div>
+        <div class="track-info">
+            <h2 class="track-name">Dance The Night</h2>
+            <p class="artist-name">Dua Lipa</p>
+        </div>
+        <div class="player-container">
+            <iframe class="spotify-iframe" src="https://open.spotify.com/embed/track/4tFd2H2zEKHl7fUsKaOxB7?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        </div>
+        <a href="https://open.spotify.com/track/4tFd2H2zEKHl7fUsKaOxB7" target="_blank" class="spotify-button">Ouvir no Spotify</a>
+    </section>
 </div>
-<a href="https://open.spotify.com/track/7DSAEUvxU8FajXtRloy8M0" target="_blank" class="spotify-button">Ouvir no Spotify</a>
-</section>
-
-<!-- Música 3 -->
-<section class="music-card">
-<img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273a91c10fe9472d9bd89802e5a" alt="Cover Cruel Summer">
-<div class="track-name">Cruel Summer</div>
-<div class="artist-name">Taylor Swift</div>
-<div class="player-container">
-<iframe src="https://open.spotify.com/embed/track/1BxfuPKGuaTgP7aM0Bbdwr" width="300" height="80" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-</div>
-<a href="https://open.spotify.com/track/1BxfuPKGuaTgP7aM0Bbdwr" target="_blank" class="spotify-button">Ouvir no Spotify</a>
-</section>
-
-<!-- Música 4 -->
-<section class="music-card">
-<img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273f1c8dcd4d3a8a5f1731dc4c5" alt="Cover Dance The Night">
-<div class="track-name">Dance The Night</div>
-<div class="artist-name">Dua Lipa</div>
-<div class="player-container">
-<iframe src="https://open.spotify.com/embed/track/4tFd2H2zEKHl7fUsKaOxB7" width="300" height="80" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-</div>
-<a href="https://open.spotify.com/track/4tFd2H2zEKHl7fUsKaOxB7" target="_blank" class="spotify-button">Ouvir no Spotify</a>
-</section>
-
-</div>
+<script>
+const feed=document.getElementById('musicFeed');const dots=document.querySelectorAll('.dot');const cards=document.querySelectorAll('.music-card');let currentIndex=0;let startY=0;function updateActiveDot(){const scrollPosition=feed.scrollTop;const cardHeight=feed.clientHeight;const newIndex=Math.round(scrollPosition/cardHeight);if(newIndex!==currentIndex&&newIndex>=0&&newIndex<dots.length){currentIndex=newIndex;dots.forEach((dot,index)=>{dot.classList.toggle('active',index===currentIndex)});cards.forEach((card,index)=>{if(index===currentIndex){card.style.animation='fadeIn 0.5s ease-out';setTimeout(()=>{card.style.animation=''},500)}})}}feed.addEventListener('scroll',()=>{window.requestAnimationFrame(()=>{updateActiveDot()})});dots.forEach((dot,index)=>{dot.addEventListener('click',()=>{const cardHeight=feed.clientHeight;feed.scrollTo({top:cardHeight*index,behavior:'smooth'})})});feed.addEventListener('touchstart',(e)=>{startY=e.touches[0].clientY},{passive:true});feed.addEventListener('touchend',(e)=>{if(!startY)return;const endY=e.changedTouches[0].clientY;const diffY=startY-endY;const threshold=50;const cardHeight=feed.clientHeight;let targetIndex=currentIndex;if(diffY>0&&currentIndex<cards.length-1)targetIndex=currentIndex+1;else if(diffY<0&&currentIndex>0)targetIndex=currentIndex-1;if(targetIndex!==currentIndex){feed.scrollTo({top:cardHeight*targetIndex,behavior:'smooth'})}startY=0},{passive:true});window.addEventListener('resize',()=>{updateActiveDot()});updateActiveDot();
+</script>
 </body>
 </html>
