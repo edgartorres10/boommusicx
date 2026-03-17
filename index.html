@@ -1,13 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>BoomMusicX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BoomMusicX - Feed Musical</title>
+<style>
+body { margin:0; padding:0; background:#000; color:#fff; font-family:sans-serif; overflow:hidden; }
+.music-feed { height:100vh; overflow-y: scroll; scroll-snap-type:y mandatory; }
+.music-card { height:100vh; scroll-snap-align:start; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.cover-image { width:300px; height:300px; object-fit:cover; border-radius:20px; margin-bottom:20px; }
+.track-name { font-size:24px; margin:0; }
+.artist-name { font-size:18px; margin:5px 0 20px; color:#aaa; }
+.player-container { width:300px; margin-bottom:10px; }
+.spotify-button { background:#1DB954; color:#000; padding:10px 20px; border-radius:50px; text-decoration:none; display:inline-block; font-weight:600; }
+</style>
 </head>
-<body style="background:black;color:white;text-align:center">
+<body>
+<div class="music-feed">
 
-<h1>BoomMusicX 🎧</h1>
-<p>Seu site está funcionando!</p>
+<!-- Música 1 -->
+<section class="music-card">
+<img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273d5403a8ad1dae5fd2c63c06b" alt="Cover Blinding Lights">
+<div class="track-name">Blinding Lights</div>
+<div class="artist-name">The Weeknd</div>
+<div class="player-container">
+<iframe src="https://open.spotify.com/embed/track/0VjIjW4GlUZAMYd2vXMi3b" width="300" height="80" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+<a href="https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b" target="_blank" class="spotify-button">Ouvir no Spotify</a>
+</section>
 
+<!-- Música 2 -->
+<section class="music-card">
+<img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273a108e07c6616e80a2c10932a" alt="Cover Flowers">
+<div class="track-name">Flowers</div>
+<div class="artist-name">Miley Cyrus</div>
+<div class="player-container">
+<iframe src="https://open.spotify.com/embed/track/7DSAEUvxU8FajXtRloy8M0" width="300" height="80" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+<a href="https://open.spotify.com/track/7DSAEUvxU8FajXtRloy8M0" target="_blank" class="spotify-button">Ouvir no Spotify</a>
+</section>
+
+<!-- Música 3 -->
+<section class="music-card">
+<img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273a91c10fe9472d9bd89802e5a" alt="Cover Cruel Summer">
+<div class="track-name">Cruel Summer</div>
+<div class="artist-name">Taylor Swift</div>
+<div class="player-container">
+<iframe src="https://open.spotify.com/embed/track/1BxfuPKGuaTgP7aM0Bbdwr" width="300" height="80" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+<a href="https://open.spotify.com/track/1BxfuPKGuaTgP7aM0Bbdwr" target="_blank" class="spotify-button">Ouvir no Spotify</a>
+</section>
+
+<!-- Música 4 -->
+<section class="music-card">
+<img class="cover-image" src="https://i.scdn.co/image/ab67616d0000b273f1c8dcd4d3a8a5f1731dc4c5" alt="Cover Dance The Night">
+<div class="track-name">Dance The Night</div>
+<div class="artist-name">Dua Lipa</div>
+<div class="player-container">
+<iframe src="https://open.spotify.com/embed/track/4tFd2H2zEKHl7fUsKaOxB7" width="300" height="80" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+<a href="https://open.spotify.com/track/4tFd2H2zEKHl7fUsKaOxB7" target="_blank" class="spotify-button">Ouvir no Spotify</a>
+</section>
+
+</div>
 </body>
 </html>
