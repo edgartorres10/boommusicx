@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     
+    <!-- ========== PWA - APP INSTALÁVEL (NOVO) ========== -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="BoomMusicX">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231DB954;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230f9b48;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='48' fill='url(%23grad)' /%3E%3Ctext x='50' y='72' font-size='52' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='bold'%3EB%3C/text%3E%3Ctext x='70' y='35' font-size='18' fill='white' font-family='Arial'%3E♪%3C/text%3E%3C/svg%3E">
+    
     <!-- ========== SEO TÍTULO E DESCRIÇÃO MELHORADOS ========== -->
     <title>BoomMusicX | Sertanejo e Agronejo Moderno - Moça da RAM</title>
     <meta name="description" content="BoomMusicX - Sertanejo e agronejo moderno. Ouça 'Moça da RAM', playlists exclusivas e hits do momento. Grave forte, vibe de rodeio e identidade rural atual. 🔥">
@@ -131,7 +139,6 @@
 
     <style>
         /* ===== TODO SEU CSS ORIGINAL CONTINUA AQUI ===== */
-        /* (mantive exatamente como você tinha, sem alterações) */
         * {
             margin: 0;
             padding: 0;
@@ -1841,6 +1848,19 @@ Siga nas redes sociais para mais lançamentos!`;
             }
         }
         
+        // ========== REGISTRO DO SERVICE WORKER (PWA) ==========
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado com sucesso!', registration);
+                    })
+                    .catch(error => {
+                        console.log('❌ Erro ao registrar Service Worker:', error);
+                    });
+            });
+        }
+        
         // Inicialização
         document.addEventListener("DOMContentLoaded", async () => {
             await loadPlayCounts();
@@ -1851,7 +1871,7 @@ Siga nas redes sociais para mais lançamentos!`;
             setupStopAllButton();
             setupNowPlayingBar();
             console.log("🎵 BoomMusicX - Site otimizado com SEO e dados estruturados!");
-            console.log("🎯 Agora o Google vai mostrar melhor seu site nos resultados!");
+            console.log("📱 PWA configurado - Agora pode instalar como app no tablet!");
         });
     </script>
 </body>
